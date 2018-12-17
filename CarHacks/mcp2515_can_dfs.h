@@ -39,6 +39,12 @@
 // if print debug information
 #define DEBUG_MODE 1
 
+
+
+//Mask Bits
+#define ALL_BITS 0x11111111
+
+
 /*
  *   Begin mt
  */

@@ -3,6 +3,7 @@
 #include "timer.h"
 #include "RXRead.h"
 #include "TXSend.h"
+#include "CanFrames.h"
 
 #define CAN0_INT 2    // Set interrupt to pin 2
 
@@ -13,8 +14,8 @@ void setup()
   Serial.begin(38400);
 
   // Initialize MCP2515 running at 16MHz with a baudrate of 33.3kb/s 
-  // and the masks and filters disabled.
-  if(mcp2515_begin(MCP_ANY, CAN_33K3BPS, MCP_16MHZ, (MCP_RX1IF | MCP_RX0IF), 10) == CAN_OK) 
+  // and the masks and filters enabled.
+  if(mcp2515_begin(MCP_STDEXT, CAN_33K3BPS, MCP_16MHZ, (MCP_RX1IF | MCP_RX0IF), 10) == CAN_OK) 
   {
     Serial.println("MCP2515 Initialized Successfully!");
   }
@@ -24,7 +25,20 @@ void setup()
   }
 
   // Change to normal mode to allow messages to be transmitted
-  mcp2515_setMode(MCP_NORMAL);  
+  mcp2515_setMode(MCP_NORMAL); 
+
+
+  //Initialize masks and filters
+  mcp2515_init_Mask(0, 1, ALL_BITS);
+  mcp2515_init_Mask(1, 1, ALL_BITS);
+
+  mcp2515_init_Filt(0, 1, GEAR_SELECT);
+  mcp2515_init_Filt(1, 1, GEAR_SELECT);
+  mcp2515_init_Filt(2, 1, GEAR_SELECT);
+  delay(1);
+  mcp2515_init_Filt(3, 1, GEAR_SELECT);
+  mcp2515_init_Filt(4, 1, GEAR_SELECT);
+  mcp2515_init_Filt(5, 1, GEAR_SELECT);
 
   // Configure pin for input
   pinMode(CAN0_INT, INPUT);

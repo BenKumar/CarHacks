@@ -9,8 +9,8 @@
 #define CAN_FRAMES_H
 
 
-#define DOOR_LOCKS  12F83130
-#define GEAR_SELECT 12F85150
+#define DOOR_LOCKS  0x12F83130
+#define GEAR_SELECT 0x12F85150
 
 
 #endif
