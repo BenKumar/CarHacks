@@ -1360,6 +1360,35 @@ INT8U mcp2515_getInterrupts(void)
 {
     return mcp2515_readRegister(MCP_CANINTF);
 }
+
+/*********************************************************************************************************
+** Function name:           mcp2515_read_mf
+** Descriptions:            Read CAN MF
+*********************************************************************************************************/
+void mcp2515_read_mf( const INT8U mcp_addr, INT8U* ext, INT8U id[4] )
+{
+    INT8U tbufdata[4];
+
+    /**ext = 0;
+    *id = 0;*/
+
+    mcp2515_readRegisterS( mcp_addr, tbufdata, 4 );
+    for(byte i = 0; i<4; i++)
+    {
+      id[i] = tbufdata[i];
+    }
+
+    //*id = (tbufdata[MCP_SIDH]<<3) + (tbufdata[MCP_SIDL]>>5);
+
+    //if ( (tbufdata[MCP_SIDL] & MCP_TXB_EXIDE_M) ==  MCP_TXB_EXIDE_M ) 
+    //{
+    //                                                                    /* extended id                  */
+    //    *id = (*id<<2) + (tbufdata[MCP_SIDL] & 0x03);
+    //    *id = (*id<<8) + tbufdata[MCP_EID8];
+    //    *id = (*id<<8) + tbufdata[MCP_EID0];
+    //    *ext = 1;
+    //}
+}
 /*********************************************************************************************************
   END FILE
 *********************************************************************************************************/

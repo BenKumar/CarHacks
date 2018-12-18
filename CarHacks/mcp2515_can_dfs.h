@@ -37,12 +37,12 @@
 #endif
 
 // if print debug information
-#define DEBUG_MODE 1
+#define DEBUG_MODE 0
 
 
 
 //Mask Bits
-#define ALL_BITS 0x11111111
+#define ALL_BITS 0x1FFFFFFF
 
 
 /*

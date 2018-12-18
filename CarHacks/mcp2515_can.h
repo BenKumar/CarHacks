@@ -27,7 +27,7 @@
 #include "mcp2515_can_dfs.h"
 #define MAX_CHAR_IN_MESSAGE 8
 
-INT8U mcp2515_begin(INT8U idmodeset, INT8U speedset, INT8U clockset,    // Initialize controller parameters
+INT8U mcp2515_begin(INT8U idmodeset, INT8U speedset, INT8U clockset,        // Initialize controller parameters
             INT8U interruptset, INT8U _CS);                                                  
 INT8U mcp2515_init_Mask(INT8U num, INT8U ext, INT32U ulData);               // Initialize Mask(s)
 INT8U mcp2515_init_Mask(INT8U num, INT32U ulData);                          // Initialize Mask(s)
@@ -50,6 +50,7 @@ INT8U mcp2515_setGPO(INT8U data);                                           // S
 INT8U mcp2515_getGPI(void);                                                 // Reads GPI
 void mcp2515_resetInterrupts(void);                                         // Sets interrupt flag register to 0
 INT8U mcp2515_getInterrupts(void);                                          // Returns state of interrupt flag register
+void mcp2515_read_mf( const INT8U mcp_addr, INT8U* ext, INT8U id[4] );       // Thing
 
 
 #endif

@@ -1,13 +1,17 @@
 #include <SPI.h>
 #include "mcp2515_can.h"
 #include "timer.h"
-#include "RXRead.h"
 #include "TXSend.h"
 #include "CanFrames.h"
+#include "CheckEvents.h"
+#include "DoorLocksSM.h"
 
 #define CAN0_INT 2    // Set interrupt to pin 2
 
 Timer t;
+
+INT8U ext;
+INT8U id[4];
 
 void setup()
 {
@@ -32,27 +36,44 @@ void setup()
   mcp2515_init_Mask(0, 1, ALL_BITS);
   mcp2515_init_Mask(1, 1, ALL_BITS);
 
-  mcp2515_init_Filt(0, 1, GEAR_SELECT);
-  mcp2515_init_Filt(1, 1, GEAR_SELECT);
-  mcp2515_init_Filt(2, 1, GEAR_SELECT);
+  mcp2515_init_Filt(0, 1, DOOR_LOCK_ID);
+  mcp2515_init_Filt(1, 1, GEAR_SELECT_ID);
+  mcp2515_init_Filt(2, 1, DOOR_LOCK_ID);
   delay(1);
-  mcp2515_init_Filt(3, 1, GEAR_SELECT);
-  mcp2515_init_Filt(4, 1, GEAR_SELECT);
-  mcp2515_init_Filt(5, 1, GEAR_SELECT);
+  mcp2515_init_Filt(3, 1, GEAR_SELECT_ID);
+  mcp2515_init_Filt(4, 1, GEAR_SELECT_ID);
+  mcp2515_init_Filt(5, 1, GEAR_SELECT_ID);
 
   // Configure pin for input
   pinMode(CAN0_INT, INPUT);
 
   // Configure timer for sending message
-  int event = t.every(5000, WiperAutoMedOn, (void*)2);
+  //int event = t.every(5000, ToggleGear, (void*)2);
 }
 
 void loop()
 {
-  if((mcp2515_getInterrupts() & (MCP_RX1IF | MCP_RX0IF)) != 0)    // If there is data loaded onto RX buffers
+  EventType event = CheckEvents();
+
+  if( event != NO_EVENT )
   {
-     ReadRXBuffer();
+    switch (event)
+    {
+      case GS_DRIVE:
+        RunDoorLocksSM(event);
+        break;
+      case GS_PARK:
+        RunDoorLocksSM(event);
+        break;
+      case DOORS_UNLOCKED:
+        RunDoorLocksSM(event);
+        break;
+      case DOORS_LOCKED:
+        RunDoorLocksSM(event);
+        break;
+    }
   }
+  
   t.update();
 }
 
